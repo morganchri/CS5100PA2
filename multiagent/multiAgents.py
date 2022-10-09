@@ -78,7 +78,6 @@ class ReflexAgent(Agent):
         ghostPos = successorGameState.getGhostPositions()
         ghostDists = []
         foodDists = []
-        foodEval = 0
         for i in range(len(ghostPos)):
             if (util.manhattanDistance(newPos, ghostPos[i]) == 0):
                 ghostDists.append(0)
@@ -90,20 +89,12 @@ class ReflexAgent(Agent):
                 foodDists.append(0)
             else:
                 foodDists.append(1/util.manhattanDistance(newPos, newFood.asList()[j]))
-        #foodEval += sum(foodDists) * len(foodDists)
-        #return successorGameState.getScore()
-        #return sum(ghostDists)
-        #return sum(foodDists)
-        #print(foodEval)
-        #print(len(foodDists))
-        #print(newGhostStates[0])
-        #return max(ghostDists)
-        #return min(foodDists) + sum(ghostDists)/len(ghostDists)
-        #return max(ghostDists)/len(ghostDists)
-        #return max(ghostDists)
-        return sum(foodDists) - sum(ghostDists)
-        #return foodEval
-        #return 0
+        if (len(foodDists) == 0):
+            return successorGameState.getScore() - max(ghostDists)
+        elif (newScaredTimes[0] != 0):
+            return max(foodDists) + successorGameState.getScore()
+        else:
+            return max(foodDists) + successorGameState.getScore() - max(ghostDists)
 
 def scoreEvaluationFunction(currentGameState: GameState):
     """
